@@ -17,6 +17,6 @@ def run_client(port="7575"):
 
 if __name__ == '__main__':
     GlobalVars.LOGGER.debug("Starting client")
-    t = Thread(target=run_client, args=("7583",))
+    t = Thread(target=run_client, args=("7584",))
     t.start()
     GlobalVars.LOGGER.debug("Server started")

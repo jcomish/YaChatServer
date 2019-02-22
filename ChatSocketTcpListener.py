@@ -15,16 +15,16 @@ class ChatSocketTcpListener(socketserver.BaseRequestHandler):
                     msg = str(msg[5:-1]).split(" ")
                     if msg[0] in GlobalVars.CHAT_SOCKET_PARENT.hosts:
                         self.reject_user(msg[0])
-                        # self.request.close()
-                        # break
+                        self.request.close()
+                        break
                     else:
                         GlobalVars.CHAT_SOCKET_PARENT.hosts[msg[0]] = (msg[1], int(msg[2]), self.client_address, self.request)
                         self.send_acpt_message(msg[0])
                         GlobalVars.CHAT_SOCKET_PARENT.send_join_to_room(msg[0])
                 elif msg[:4] == "EXIT":
                     self.user_exited_room()
-                    # self.request.close()
-                    # break
+                    self.request.close()
+                    break
         except BaseException as e:
             GlobalVars.LOGGER.exception(str(e))
             # self.request.close()
@@ -104,5 +104,4 @@ class ChatSocketTcpListener(socketserver.BaseRequestHandler):
 
         del GlobalVars.CHAT_SOCKET_PARENT.hosts[screenname]
         GlobalVars.LOGGER.debug("(" + str(datetime.now()) + ") PROCESSED USER EXIT: " + screenname)
-        # self.request.shutdown(SHUT_RDWR)
-        # self.request.close()
+        self.request.close()
