@@ -27,7 +27,8 @@ class ChatSocketTcpListener(socketserver.BaseRequestHandler):
                     break
         except BaseException as e:
             GlobalVars.LOGGER.exception(str(e))
-            # self.request.close()
+            self.user_exited_room()
+            self.request.close()
 
     def reject_user(self, screenname):
         self.send_msg_over_tcp("RJCT " + screenname + "\n", self.request)
@@ -74,8 +75,8 @@ class ChatSocketTcpListener(socketserver.BaseRequestHandler):
         # to keep receiving until your condition is met, which is a newline in our case.
         while True:
             chunk = socket.recv(1024)
-            # if chunk == b'':
-            #     raise RuntimeError("socket connection broken")
+            if chunk == b'':
+                raise RuntimeError("socket connection broken")
             chunks.append(chunk)
             if b"\n" in chunk:
                 break
